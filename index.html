@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live2D Web</title>
+    <title>Live2D Web V2</title>
     <style>
         /* 背景保持完美的透明 */
         body { margin: 0; padding: 0; overflow: hidden; background: transparent; }
@@ -24,6 +24,7 @@
             transparent: true 
         });
 
+        // 這裡已經精準切換到你最新的「Q版動態貼圖_鹿聆半夏」資料夾與 v2 json 了
         const modelUrl = './models/Q版動態貼圖_鹿聆半夏/Q版動態貼圖_鹿聆半夏_v2.model3.json';
 
         PIXI.live2d.Live2DModel.from(modelUrl).then((model) => {
@@ -39,7 +40,7 @@
             // 點擊互動
             model.interactive = true;
             model.on('pointerdown', () => { 
-                // 觸發動作換成了你在 .model3.json 裡登記的 "TapBody"
+                // 點擊時，播放我們在下面 model3.json 裡設定的打招呼動作
                 model.motion('TapBody'); 
             });
             
