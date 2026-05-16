@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live2D Web</title>
+    <title>Live2D Web V2</title>
     <style>
-        /* 1. 這裡把背景改回透明 (background: transparent) */
+        /* 背景保持完美的透明 */
         body { margin: 0; padding: 0; overflow: hidden; background: transparent; }
         canvas { width: 100vw; height: 100vh; display: block; }
     </style>
@@ -21,16 +21,16 @@
             view: document.getElementById('canvas'),
             autoStart: true,
             resizeTo: window,
-            /* 2. 這裡把原本的 backgroundColor 刪掉，換回 transparent: true */
             transparent: true 
         });
 
-        const modelUrl = './models/Q版_鹿聆半夏_vts/Q版動態貼圖_鹿聆半夏.model3.json';
+        // 🛠️ 1. 這裡幫你把路徑精準切換成 V2 版本的點菜單了
+        const modelUrl = './models/Q版_鹿聆半夏_vts/Q版動態貼圖_鹿聆半夏_v2.model3.json';
 
         PIXI.live2d.Live2DModel.from(modelUrl).then((model) => {
             app.stage.addChild(model);
             
-            // 調整模型位置與大小
+            // 調整模型位置與大小 (置中)
             model.anchor.set(0.5, 0.5);
             model.x = window.innerWidth / 2;
             model.y = window.innerHeight / 2;
@@ -39,7 +39,10 @@
             
             // 點擊互動
             model.interactive = true;
-            model.on('pointerdown', () => { model.motion('Tap'); });
+            model.on('pointerdown', () => { 
+                // 🛠️ 2. 這裡幫你把觸發動作換成了你在 .model3.json 裡登記的 "TapBody"
+                model.motion('TapBody'); 
+            });
             
         }).catch(err => {
             console.error("❌ 模型載入失敗了，錯誤原因是：", err);
