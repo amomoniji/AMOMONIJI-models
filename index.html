@@ -3,43 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live2D 測試中</title>
+    <title>Live2D Web</title>
     <style>
-        /* 暫時給一個灰色的背景，用來測試網頁到底有沒有活著 */
-        body { margin: 0; padding: 0; overflow: hidden; background-color: #cccccc; }
+        body { margin: 0; padding: 0; overflow: hidden; background: transparent; }
         canvas { width: 100vw; height: 100vh; display: block; }
     </style>
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.3.12/pixi.min.js"></script>
+    
     <script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/pixi.js@6.5.2/dist/browser/pixi.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display@0.4.0/dist/cubism4.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display/dist/index.min.js"></script>
 </head>
 <body>
+
     <canvas id="canvas"></canvas>
+
     <script>
+        // 初始化 PixiJS 應用程式
         const app = new PIXI.Application({
             view: document.getElementById('canvas'),
             autoStart: true,
             resizeTo: window,
-            backgroundColor: 0xcccccc // 灰色背景
+            transparent: true, // 背景透明，方便完美融入 Wix
+            antialias: true
         });
 
+        // 這是你完美正確的路徑！
         const modelUrl = './models/Q版_鹿聆半夏_vts/Q版動態貼圖_鹿聆半夏.model3.json';
 
+        // 開始載入模型
         PIXI.live2d.Live2DModel.from(modelUrl).then((model) => {
             app.stage.addChild(model);
+
+            // 調整模型大小與位置 (置中)
             model.anchor.set(0.5, 0.5);
             model.x = window.innerWidth / 2;
             model.y = window.innerHeight / 2;
+            
+            // 讓模型大小自適應視窗縮放
             const scale = Math.min(window.innerWidth / model.width, window.innerHeight / model.height) * 0.8;
             model.scale.set(scale);
-            
+
+            // 啟用互動 (滑鼠跟隨)
             model.interactive = true;
-            model.on('pointerdown', () => { model.motion('Tap'); });
+            model.on('pointerdown', () => {
+                model.motion('Tap'); 
+            });
             
         }).catch(err => {
-            // 這行會把錯誤訊息印在 F12 裡面
-            console.error("❌ 模型載入失敗了，錯誤原因是：", err);
+            console.error("模型載入失敗，錯誤細節：", err);
         });
     </script>
 </body>
