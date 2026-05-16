@@ -1,0 +1,23 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "Q版動態貼圖_鹿聆半夏.moc3",
+		"Textures": [
+			"Q版動態貼圖_鹿聆半夏.2048/texture_00.png"
+		],
+		"Physics": "Q版動態貼圖_鹿聆半夏.physics3.json",
+		"DisplayInfo": "Q版動態貼圖_鹿聆半夏.cdi3.json"
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": []
+		},
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": []
+		}
+	]
+}

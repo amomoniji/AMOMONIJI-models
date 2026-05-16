@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live2D Wix Embed</title>
+    <style>
+        body { margin: 0; padding: 0; overflow: hidden; background: transparent; }
+        canvas { width: 100vw; height: 100vh; display: block; }
+    </style>
+    <!-- 載入 PixiJS 與 Cubism Core (Live2D 核心驅動) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.3.12/pixi.min.js"></script>
+    <script src="https://cubism.live2d.com/sdk-web/bin/cubismcore/live2dcontainercore.js"></script>
+    <!-- 載入開源的 pixi-live2d-display 整合套件 -->
+    <script src="https://cdn.jsdelivr.net/gh/guansss/pixi-live2d-display/dist/index.min.js"></script>
+</head>
+<body>
+
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const { Application, live2d: { Live2DModel } } = PIXI;
+
+        // 1. 初始化 PixiJS 應用程式
+        const app = new Application({
+            view: document.getElementById('canvas'),
+            autoStart: true,
+            resizeTo: window,
+            transparent: true, // 背景透明，方便完美融入 Wix 網頁背景
+            antialias: true
+        });
+
+        // 2. 載入你的 Live2D 模型（請替換成你的 model3.json 路徑）
+        const modelUrl = './models/YourModel/YourModel.model3.json';
+
+        Live2DModel.from(modelUrl).then((model) => {
+            app.stage.addChild(model);
+
+            // 調整模型大小與位置
+            model.anchor.set(0.5, 0.5);
+            model.x = window.innerWidth / 2;
+            model.y = window.innerHeight / 2;
+            
+            // 讓模型大小自適應視窗縮放
+            const scale = Math.min(window.innerWidth / model.width, window.innerHeight / model.height) * 0.8;
+            model.scale.set(scale);
+
+            // 啟用互動（跟隨滑鼠、點擊觸發動作等）
+            model.interactive = true;
+            model.on('hit', (hitAreas) => {
+                if (hitAreas.includes('body')) {
+                    model.motion('Tap'); // 點擊身體觸發 Tap 動作
+                }
+            });
+        }).catch(err => console.error("模型載入失敗：", err));
+    </script>
+</body>
+</html>
