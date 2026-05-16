@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live2D Web V2 Final</title>
+    <title>Live2D Web Final Drive</title>
     <style>
         body { margin: 0; padding: 0; overflow: hidden; background: transparent; }
         canvas { width: 100vw; height: 100vh; display: block; }
@@ -23,8 +23,10 @@
             transparent: true 
         });
 
-        // 加上 ?v=final 強迫重新載入最新結構
-        const modelUrl = './models/Q版動態貼圖_鹿聆半夏/Q版動態貼圖_鹿聆半夏 _v2.model3.json?v=final';
+        // 載入模型本體
+        const modelUrl = './models/Q版動態貼圖_鹿聆半夏/Q版動態貼圖_鹿聆半夏 _v2.model3.json?v=force_update';
+        // 動作檔的直接路徑
+        const motionUrl = './models/Q版動態貼圖_鹿聆半夏/15.打招呼(Greet).motion3?v=force_update';
 
         PIXI.live2d.Live2DModel.from(modelUrl).then((model) => {
             app.stage.addChild(model);
@@ -35,21 +37,42 @@
             const scale = Math.min(window.innerWidth / model.width, window.innerHeight / model.height) * 0.8;
             model.scale.set(scale);
             
-            // 開啟網頁直接播放打招呼動作
-            try {
-                model.motion('TapBody');
-            } catch(e) {
-                console.log("自動播放暫時未就緒");
-            }
+            // 🚀 【終極核心】直接讀取動作檔案並載入模型
+            fetch(motionUrl)
+                .then(response => response.json())
+                .then(motionJson => {
+                    // 強行將動作檔塞入模型的自訂動作管理員中
+                    const motionManager = model.internalModel.motionManager;
+                    const definition = {
+                        "File": "15.打招呼(Greet).motion3",
+                        "FadeInTime": 0.5,
+                        "FadeOutTime": 0.5
+                    };
+                    
+                    // 建立網頁專用的動作物件
+                    const live2dMotion = PIXI.live2d.Live2DCubismMotion.create(motionJson, definition);
+                    
+                    // 定義一個隨時可以呼叫的播放功能
+                    function playGreet() {
+                        motionManager.startMotion(live2dMotion);
+                        console.log("▶️ 已強行觸發打招呼動作");
+                    }
 
-            // 點擊互動
-            model.interactive = true;
-            model.on('pointerdown', () => { 
-                model.motion('TapBody'); 
-            });
+                    // 1. 一開啟網頁就立刻強行播放
+                    setTimeout(playGreet, 500);
+
+                    // 2. 點擊模型時也強行播放
+                    model.interactive = true;
+                    model.on('pointerdown', () => { 
+                        playGreet();
+                    });
+                })
+                .catch(motionErr => {
+                    console.error("❌ 動作檔案直接載入失敗：", motionErr);
+                });
             
         }).catch(err => {
-            console.error("❌ 模型載入失敗了：", err);
+            console.error("❌ 模型載入失敗：", err);
         });
     </script>
 </body>
