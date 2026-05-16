@@ -24,23 +24,27 @@
             transparent: true 
         });
 
-        // 🛠️ 模型路徑
-        const modelUrl = './models/Q版動態貼圖_鹿聆半夏/Q版動態貼圖_鹿聆半夏 _v2.model3.json';
+        // 🛠️ 這裡加上了 ?v=123，強迫瀏覽器忘記舊快取，立刻讀取最新的點菜單！
+        const modelUrl = './models/Q版動態貼圖_鹿聆半夏/Q版動態貼圖_鹿聆半夏 _v2.model3.json?v=123';
 
         PIXI.live2d.Live2DModel.from(modelUrl).then((model) => {
             app.stage.addChild(model);
             
             // 調整模型位置與大小 (置中)
-            model.anchor.set(0.5, 0.3);
+            model.anchor.set(0.5, 0.5);
             model.x = window.innerWidth / 2;
             model.y = window.innerHeight / 2;
             const scale = Math.min(window.innerWidth / model.width, window.innerHeight / model.height) * 0.8;
             model.scale.set(scale);
             
-            //  一開啟網頁，模型就立刻自動播放一次打招呼動作
-            model.motion('TapBody');
+            // ✨ 嘗試播放打招呼動作
+            try {
+                model.motion('TapBody');
+            } catch(e) {
+                console.log("自動播放失敗，等待點擊觸發", e);
+            }
 
-            // 點擊互動：用滑鼠點擊她時，也會再次觸發打招呼
+            // 點擊互動：用滑鼠點擊她時，再次觸發打招呼
             model.interactive = true;
             model.on('pointerdown', () => { 
                 model.motion('TapBody'); 
