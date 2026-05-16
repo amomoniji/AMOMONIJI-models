@@ -3,40 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live2D Wix Embed</title>
+    <title>Live2D Web</title>
     <style>
         body { margin: 0; padding: 0; overflow: hidden; background: transparent; }
         canvas { width: 100vw; height: 100vh; display: block; }
     </style>
-    <!-- 載入 PixiJS 與 Cubism Core (Live2D 核心驅動) -->
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.3.12/pixi.min.js"></script>
-    <script src="https://cubism.live2d.com/sdk-web/bin/cubismcore/live2dcontainercore.js"></script>
-    <!-- 載入開源的 pixi-live2d-display 整合套件 -->
-    <script src="https://cdn.jsdelivr.net/gh/guansss/pixi-live2d-display/dist/index.min.js"></script>
+    
+    <script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display/dist/index.min.js"></script>
 </head>
 <body>
 
     <canvas id="canvas"></canvas>
 
     <script>
-        const { Application, live2d: { Live2DModel } } = PIXI;
-
-        // 1. 初始化 PixiJS 應用程式
-        const app = new Application({
+        // 初始化 PixiJS 應用程式
+        const app = new PIXI.Application({
             view: document.getElementById('canvas'),
             autoStart: true,
             resizeTo: window,
-            transparent: true, // 背景透明，方便完美融入 Wix 網頁背景
+            transparent: true, // 背景透明，方便完美融入 Wix
             antialias: true
         });
 
-        // 2. 載入你的 Live2D 模型（請替換成 model3.json 路徑）
+        // 這是你完美正確的路徑！
         const modelUrl = './models/Q版_鹿聆半夏_vts/Q版動態貼圖_鹿聆半夏.model3.json';
 
-        Live2DModel.from(modelUrl).then((model) => {
+        // 開始載入模型
+        PIXI.live2d.Live2DModel.from(modelUrl).then((model) => {
             app.stage.addChild(model);
 
-            // 調整模型大小與位置
+            // 調整模型大小與位置 (置中)
             model.anchor.set(0.5, 0.5);
             model.x = window.innerWidth / 2;
             model.y = window.innerHeight / 2;
@@ -45,14 +45,15 @@
             const scale = Math.min(window.innerWidth / model.width, window.innerHeight / model.height) * 0.8;
             model.scale.set(scale);
 
-            // 啟用互動（跟隨滑鼠、點擊觸發動作等）
+            // 啟用互動 (滑鼠跟隨)
             model.interactive = true;
-            model.on('hit', (hitAreas) => {
-                if (hitAreas.includes('body')) {
-                    model.motion('Tap'); // 點擊身體觸發 Tap 動作
-                }
+            model.on('pointerdown', () => {
+                model.motion('Tap'); 
             });
-        }).catch(err => console.error("模型載入失敗：", err));
+            
+        }).catch(err => {
+            console.error("模型載入失敗，錯誤細節：", err);
+        });
     </script>
 </body>
 </html>
