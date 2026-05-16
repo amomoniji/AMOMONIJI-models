@@ -24,7 +24,7 @@
             transparent: true 
         });
 
-        // 🛠️ 這裡已經精準對齊你的「半夏」與「_v2」之間的半形空格了！
+        // 🛠️ 模型路徑
         const modelUrl = './models/Q版動態貼圖_鹿聆半夏/Q版動態貼圖_鹿聆半夏 _v2.model3.json';
 
         PIXI.live2d.Live2DModel.from(modelUrl).then((model) => {
@@ -37,7 +37,7 @@
             const scale = Math.min(window.innerWidth / model.width, window.innerHeight / model.height) * 0.8;
             model.scale.set(scale);
             
-            // ✨ 一開啟網頁，模型就立刻自動播放一次打招呼動作！
+            //  一開啟網頁，模型就立刻自動播放一次打招呼動作
             model.motion('TapBody');
 
             // 點擊互動：用滑鼠點擊她時，也會再次觸發打招呼
