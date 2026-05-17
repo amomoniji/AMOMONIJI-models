@@ -13,7 +13,7 @@
 	},
 	"Curves": [
 		{
-			"Target": "Parameter",
+			"Target": "Normal",
 			"Id": "ParamAngleY",
 			"Segments": [
 				0,
@@ -63,7 +63,7 @@
 			]
 		},
 		{
-			"Target": "Parameter",
+			"Target": "Normal",
 			"Id": "ParamAngleZ",
 			"Segments": [
 				0,
